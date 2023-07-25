@@ -1,0 +1,5 @@
+You will need to acquire Twitter Api first to use this one. Free version should do the trick though. 
+
+Before running this script, make sure you have installed cURL for PHP. You can usually do this by enabling the curl extension in your php.ini file or installing the relevant PHP packages depending on your system.
+
+This script sends a request to the Twitter API's recent search endpoint and fetches tweets that match the search query. It then outputs the username and text of each matching tweet. Remember to replace 'YOUR_CONSUMER_KEY', 'YOUR_CONSUMER_SECRET', 'YOUR_ACCESS_TOKEN', 'YOUR_ACCESS_TOKEN_SECRET', and 'Your search text here' with your actual API keys, access tokens, and the text you want to search for.
