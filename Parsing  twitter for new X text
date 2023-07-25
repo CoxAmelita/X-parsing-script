@@ -1,0 +1,65 @@
+<?php
+// Replace 'YOUR_CONSUMER_KEY', 'YOUR_CONSUMER_SECRET', 'YOUR_ACCESS_TOKEN', and 'YOUR_ACCESS_TOKEN_SECRET'
+// with your actual Twitter API keys and access tokens
+$consumerKey = 'YOUR_CONSUMER_KEY';
+$consumerSecret = 'YOUR_CONSUMER_SECRET';
+$accessToken = 'YOUR_ACCESS_TOKEN';
+$accessTokenSecret = 'YOUR_ACCESS_TOKEN_SECRET';
+
+// Search query for the specific text you want to search for
+$searchQuery = 'Your search text here';
+
+// URL for the Twitter API
+$url = 'https://api.twitter.com/2/tweets/search/recent';
+
+// Set up the HTTP headers for authentication
+$authHeader = [
+    'Authorization: Bearer ' . $accessToken,
+];
+
+// Set up the query parameters
+$queryParams = [
+    'query' => urlencode($searchQuery),
+    'tweet.fields' => 'created_at,text',
+    'expansions' => 'author_id',
+    'user.fields' => 'username',
+];
+
+// Build the full API URL with the query parameters
+$apiUrl = $url . '?' . http_build_query($queryParams);
+
+// Initialize cURL session
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $apiUrl);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, $authHeader);
+
+// Execute the API call
+$response = curl_exec($ch);
+
+// Check for cURL errors
+if (curl_errno($ch)) {
+    echo 'cURL error: ' . curl_error($ch);
+}
+
+// Close cURL session
+curl_close($ch);
+
+// Decode the JSON response
+$data = json_decode($response, true);
+
+// Check if the response contains any tweets
+if (isset($data['data']) && is_array($data['data']) && count($data['data']) > 0) {
+    foreach ($data['data'] as $tweet) {
+        // Get the tweet text and username
+        $tweetText = $tweet['text'];
+        $username = $data['includes']['users'][0]['username'];
+        
+        // Output the tweet information
+        echo "Username: @$username\n";
+        echo "Tweet: $tweetText\n";
+        echo "-----------------\n";
+    }
+} else {
+    echo 'No tweets found.';
+}
